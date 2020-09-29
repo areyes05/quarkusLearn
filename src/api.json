@@ -1,0 +1,69 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "version": "1.0.0",
+    "title": "Icecream Police File",
+    "description": "Microservice for reading and writing ICP Files"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Local Dev Server"
+    }
+  ],
+  "paths": {
+    "/icp/policy-files": {
+      "description": "The /icp/policy-files route provides a POST route that is responsible for ingesting and verifying ICP Files",
+      "post": {
+        "description": "Ingest a single ICP File",
+        "operationId": "postIcpPolicyFile",
+        "requestBody": {
+          "description": "An ICP File with a SHA-256 Hash value",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/icecreamPoliceFilePostInterface"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Icecream File was successfully ingested"
+          },
+          "400": {
+            "description": "(Client error) The supplied SHA-256 hash value or ICP File is nonexistent/bad schema"
+          },
+          "500": {
+            "description": "(Server error) Error connecting to database"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "icecreamPoliceFilePostInterface": {
+        "description": "The ICP provides an interface to encapsulate the data for the icecream operation",
+        "type": "object",
+        "format": "interface",
+        "required": [
+          "icpFile",
+          "sha256HashValue"
+        ],
+        "properties": {
+          "icpFile": {
+            "type": "string"
+          },
+          "sha256HashValue": {
+            "type": "string",
+            "format": "hex",
+            "minLength": 64,
+            "maxLength": 64
+          }
+        }
+      }
+    }
+  }
+}

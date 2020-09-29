@@ -1,0 +1,8 @@
+
+{% for import in imports %}import {{ import }};
+{% endfor %}
+public class {{className}} extends PanacheEntity {
+
+  {% for var in _vars %}public {{var.java_type}} {{var.property_name}};
+  {% endfor %}
+}
